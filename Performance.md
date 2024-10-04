@@ -1,6 +1,6 @@
 ## Experiment
 
-- Command: `X = X + 1`
+- Command: `X = (X or 0) + 1`
 - 1000 Messages
 
 ### Scenario 1
