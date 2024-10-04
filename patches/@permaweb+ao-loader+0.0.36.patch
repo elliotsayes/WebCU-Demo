@@ -1,0 +1,13 @@
+diff --git a/node_modules/@permaweb/ao-loader/dist/index.cjs b/node_modules/@permaweb/ao-loader/dist/index.cjs
+index 4d7a432..df3ba95 100644
+--- a/node_modules/@permaweb/ao-loader/dist/index.cjs
++++ b/node_modules/@permaweb/ao-loader/dist/index.cjs
+@@ -6376,7 +6376,7 @@ var require_emscripten2 = __commonJS({
+           process["hrtime"] = Date.now;
+         if (!Module2)
+           Module2 = {};
+-        Module2["thisProgram"] = "thisProgram";
++        // Module2["thisProgram"] = "thisProgram";
+         function hashMemory(id) {
+           var ret = 0;
+           var len = _sbrk();
