@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test:node": "vitest ./src/**/*.node.test.ts",
+    "test:node": "vitest ./src/**/*.test.node.ts",
     "test:web": "web-test-runner ./src/**/*.test.ts --node-resolve",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
