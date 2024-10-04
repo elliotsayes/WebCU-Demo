@@ -1,5 +1,5 @@
 import AoLoader from "@permaweb/ao-loader";
-import { fetchTxIdData } from "./arweave";
+import { fetchModuleData, fetchModuleDef } from "./module";
 
 const moduleId = "GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0";
 /* ao READ-ONLY Env Variables */
@@ -34,17 +34,10 @@ const env = { Process, Module };
 // };
 
 export async function loadProcessRawTest() {
-  const wasmBinary = await fetchTxIdData(moduleId);
+  const moduleDef = await fetchModuleDef(moduleId);
+  const moduleData = await fetchModuleData(moduleId);
 
-  const options = {
-    format: "wasm32-unknown-emscripten2",
-    inputEncoding: "JSON-1",
-    outputEncoding: "JSON-1",
-    memoryLimit: "524288000", // in bytes
-    computeLimit: 9e12, //.toString(),
-    extensions: [],
-  };
-  const handle = await AoLoader(wasmBinary, options);
+  const handle = await AoLoader(moduleData, moduleDef);
 
   const command1 = "X = 123";
   const result = await handle(
@@ -67,7 +60,7 @@ export async function loadProcessRawTest() {
   // saveToCache(result.Memory);
   console.log({ input: command1, output: result.Output });
 
-  const handle2 = await AoLoader(wasmBinary, options);
+  const handle2 = await AoLoader(moduleData, moduleDef);
 
   const command2 = "X";
   const result2 = await handle2(

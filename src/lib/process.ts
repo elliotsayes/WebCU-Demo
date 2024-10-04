@@ -2,9 +2,10 @@ import Transaction from "arweave/node/lib/transaction";
 import { logger } from "./logger";
 import { tagValue } from "./utils";
 
+const cuUrl = "https://cu.ao-testnet.xyz";
 const suUrl = "https://su-router.ao-testnet.xyz";
 
-export async function parseProcessData(message: Transaction) {
+async function parseProcessDef(message: Transaction) {
   return {
     block: message.block,
     owner: message.owner,
@@ -20,7 +21,23 @@ export async function fetchProcessDef(processId: string) {
   logger.debug("After process def fetch");
   if (response.ok) {
     logger.debug("Process def fetch ok");
-    return parseProcessData(await response.json());
+    const data = await response.json();
+    logger.debug("Process def fetch data");
+    return parseProcessDef(data);
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+}
+
+export async function fetchProcessState(processId: string) {
+  logger.debug("Before process state fetch");
+  const response = await fetch(`${cuUrl}/state/${processId}`);
+  logger.debug("After process state fetch");
+  if (response.ok) {
+    logger.debug("Process state fetch ok");
+    const data = await response.arrayBuffer();
+    logger.debug("Process state fetch data");
+    return data;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
   }

@@ -3,4 +3,4 @@ import { loadProcessRawTest } from "./processExample.ts";
 
 it("should run a test", async () => {
   await loadProcessRawTest();
-});
+}).timeout(10_000);
