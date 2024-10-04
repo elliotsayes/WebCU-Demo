@@ -1,15 +1,26 @@
-## Scenario 1
+## Experiment
 
 - Command: `X = X + 1`
 - 1000 Messages
+
+### Scenario 1
+
 - New handle each iteration
-- 14000~15000ms
-- 14~15ms per message
+  - Initial memory
+  - ~14.5s
+  - ~14.5ms per message
 
-## Scenario 2
+### Scenario 2
 
-- Command: `X = X + 1`
-- 1000 Messages
 - Reuse handle between iterations
-- 1600~1700ms
-- 1.6~1.7ms per message
+  - ~1.6s
+  - ~1.6ms per message
+    - ~9x faster
+
+## Conclusion
+
+- Reusing the handle is much faster than creating a new one each time.
+
+Calculations:
+WASM execution time = ~2ms
+Handle creation time = ~13ms
