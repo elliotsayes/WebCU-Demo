@@ -1,6 +1,7 @@
 import Transaction from "arweave/node/lib/transaction";
 import { logger } from "./logger";
 import { tagValue } from "./utils";
+import { fetchModuleData, fetchModuleDef } from "./module";
 
 const cuUrl = "https://cu.ao-testnet.xyz";
 const suUrl = "https://su-router.ao-testnet.xyz";
@@ -41,4 +42,18 @@ export async function fetchProcessState(processId: string) {
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
   }
+}
+
+export async function fetchProcessInitial(processId: string) {
+  const processDef = await fetchProcessDef(processId);
+  const moduleDef = await fetchModuleDef(processDef.moduleTxId);
+  const moduleData = await fetchModuleData(processDef.moduleTxId);
+
+  return { processDef, moduleDef, moduleData, processState: null };
+}
+
+export async function fetchProcessCurrent(processId: string) {
+  const processInitial = await fetchProcessInitial(processId);
+  const processState = await fetchProcessState(processId);
+  return { ...processInitial, processState };
 }

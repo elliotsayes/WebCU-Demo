@@ -2,10 +2,16 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { loadProcessRawTest } from "./demo/processExample";
+
+const instance = new ComlinkWorker<typeof import("./worker")>(
+  new URL("./worker", import.meta.url),
+  {}
+);
+
+const processId = "sYJP_BK4fwXNl0rg8J_5gUWZfmAitoXh_GVleAyGFKg";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(100);
 
   return (
     <>
@@ -19,7 +25,33 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={loadProcessRawTest}>count is {count}</button>
+        <button
+          onClick={() => {
+            instance.loadProcess(processId).then((success) => {
+              console.log({ loadProcess: success });
+            });
+          }}
+        >
+          loadProcess
+        </button>
+        <input
+          value={count}
+          onChange={(e) => setCount(Number(e.target.value))}
+        />
+        <button
+          onClick={() => {
+            const timeBefore = performance.now();
+            instance.runMessages(count).then((result) => {
+              const timeAfter = performance.now();
+              console.log({
+                time: timeAfter - timeBefore,
+                runMessages: { count, result },
+              });
+            });
+          }}
+        >
+          runMessages
+        </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
