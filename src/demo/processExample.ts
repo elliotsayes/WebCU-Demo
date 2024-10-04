@@ -1,3 +1,4 @@
+import AoLoader from "@permaweb/ao-loader";
 import { fetchModuleData, fetchModuleDef } from "../lib/module";
 
 const moduleId = "GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0";
