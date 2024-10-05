@@ -44,12 +44,32 @@ export async function fetchProcessState(processId: string) {
   }
 }
 
+export function createEnv(
+  processDef: Awaited<ReturnType<typeof fetchProcessDef>>,
+  moduleDef: Awaited<ReturnType<typeof fetchModuleDef>>
+) {
+  return {
+    Process: {
+      Id: processDef.block.id,
+      Owner: processDef.owner,
+      Tags: processDef.tags,
+    },
+    Module: {
+      Id: moduleDef.tx.id,
+      Owner: moduleDef.tx.owner,
+      Tags: moduleDef.tx.tags,
+    },
+  };
+}
+
 export async function fetchProcessInitial(processId: string) {
   const processDef = await fetchProcessDef(processId);
   const moduleDef = await fetchModuleDef(processDef.moduleTxId);
+  const env = createEnv(processDef, moduleDef);
+
   const moduleData = await fetchModuleData(processDef.moduleTxId);
 
-  return { processDef, moduleDef, moduleData, processState: null };
+  return { processDef, moduleDef, env, moduleData, processState: null };
 }
 
 export async function fetchProcessCurrent(processId: string) {

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "test:node": "vitest ./src/**/*.test.node.ts",
-    "test:web": "web-test-runner ./src/**/*.test.ts --node-resolve",
+    "test:web": "web-test-runner --node-resolve",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

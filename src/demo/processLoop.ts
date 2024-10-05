@@ -27,7 +27,10 @@ export async function processLoop(
   processData: Awaited<ReturnType<typeof fetchProcessInitial>>,
   count: number
 ) {
-  const handle = await AoLoader(processData.moduleData, processData.moduleDef);
+  const handle = await AoLoader(
+    processData.moduleData,
+    processData.moduleDef.options
+  );
 
   let command = `X = 1`;
   let memory = null;

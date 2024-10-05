@@ -37,7 +37,7 @@ export async function loadProcessRawTest() {
   const moduleDef = await fetchModuleDef(moduleId);
   const moduleData = await fetchModuleData(moduleId);
 
-  const handle = await AoLoader(moduleData, moduleDef);
+  const handle = await AoLoader(moduleData, moduleDef.options);
 
   const command1 = "X = 123";
   const result = await handle(
@@ -60,7 +60,7 @@ export async function loadProcessRawTest() {
   // saveToCache(result.Memory);
   console.log({ input: command1, output: result.Output });
 
-  const handle2 = await AoLoader(moduleData, moduleDef);
+  const handle2 = await AoLoader(moduleData, moduleDef.options);
 
   const command2 = "X";
   const result2 = await handle2(

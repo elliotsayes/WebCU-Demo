@@ -21,7 +21,7 @@ export async function fetchModuleDef(moduleId: string) {
   assert.equal(tagValue(tx.tags, "Data-Protocol"), "ao");
   assert.equal(tagValue(tx.tags, "Type"), "Module");
 
-  const moduleDefTagKeys = [
+  const optionsTagKeys = [
     "Module-Format",
     "Input-Encoding",
     "Output-Encoding",
@@ -29,14 +29,17 @@ export async function fetchModuleDef(moduleId: string) {
     "Compute-Limit",
   ];
 
-  const moduleDefTags = moduleDefTagKeys.reduce((acc, key) => {
+  const options = optionsTagKeys.reduce((acc, key) => {
     const match = tagValue(tx.tags, key);
     assert.ok(match);
     acc[transformModuleKey(key)] = match;
     return acc;
   }, {} as Record<string, string>);
 
-  return moduleDefTags;
+  return {
+    tx,
+    options,
+  };
 }
 
 export async function fetchModuleData(moduleId: string) {
