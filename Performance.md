@@ -17,9 +17,19 @@
   - ~1.6ms per message
     - ~9x faster
 
+
+### Scenario 3
+
+- Reuse handle between iterations
+- Use AOP module
+  - ~20s
+  - ~20ms per message
+    - ~13x slower
+
 ## Conclusion
 
 - Reusing the handle is much faster than creating a new one each time.
+- AOP module is significantly slower...
 
 Calculations:
 WASM execution time = ~2ms

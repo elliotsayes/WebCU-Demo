@@ -1,11 +1,18 @@
 import AoLoader from "@permaweb/ao-loader";
 import { fetchProcessInitial, fetchProcessState } from "./lib/process";
 import { AoMessage, generateMessages } from "./lib/messages";
+import { generateFakeAopProcess } from "./demo/fakeAopProcess";
+import { processLoop } from "./demo/processLoop";
 
 let processData: Awaited<ReturnType<typeof fetchProcessInitial>> | undefined;
 let processHandle: Awaited<ReturnType<typeof AoLoader>> | undefined;
 let processStateSnapshot: ArrayBuffer | undefined;
 let pendingMessagesBuffer: Array<AoMessage> = [];
+
+export async function loadAopProcess() {
+  processData = await generateFakeAopProcess();
+  return true;
+}
 
 export async function loadProcess(processId: string) {
   try {
@@ -15,6 +22,17 @@ export async function loadProcess(processId: string) {
     console.error(e);
     return false;
   }
+}
+
+export async function runMessages(count: number) {
+  if (!processData) {
+    console.error("Process not loaded");
+    return;
+  }
+
+  const res = await processLoop(processData, count);
+
+  return res;
 }
 
 export async function startSubscription(processId: string) {

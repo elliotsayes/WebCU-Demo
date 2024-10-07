@@ -8,6 +8,7 @@ const suUrl = "https://su-router.ao-testnet.xyz";
 
 async function parseProcessDef(message: Transaction) {
   return {
+    id: message.id,
     block: message.block,
     owner: message.owner,
     timestamp: message.timestamp,
@@ -50,7 +51,7 @@ export function createEnv(
 ) {
   return {
     Process: {
-      Id: processDef.block.id,
+      Id: processDef.id,
       Owner: processDef.owner,
       Tags: processDef.tags,
     },

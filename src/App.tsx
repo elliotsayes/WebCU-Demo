@@ -27,7 +27,7 @@ function App() {
       <div className="card">
         <button
           onClick={() => {
-            instance.loadProcess(processId).then((success) => {
+            instance.loadAopProcess().then((success) => {
               console.log({ loadProcess: success });
             });
           }}
