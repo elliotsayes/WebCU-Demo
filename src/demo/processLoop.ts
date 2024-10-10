@@ -1,5 +1,4 @@
 import AoLoader, { Message } from "@permaweb/ao-loader";
-import { fetchProcessInitial } from "../lib/process";
 
 const command0 = `
 -- Load the AO Physics library
