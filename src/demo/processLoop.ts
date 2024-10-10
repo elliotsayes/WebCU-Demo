@@ -1,4 +1,4 @@
-import AoLoader from "@permaweb/ao-loader";
+import AoLoader, { Message } from "@permaweb/ao-loader";
 import { fetchProcessInitial } from "../lib/process";
 
 const command0 = `
@@ -75,15 +75,9 @@ return worldState
 `;
 
 export async function processLoop(
-  processData: Awaited<ReturnType<typeof fetchProcessInitial>>,
-  count: number
+  count: number,
+  applyMessage: (message: Message) => Promise<AoLoader.HandleResponse>
 ) {
-  // console.log("processLoop", processData, count);
-  const handle = await AoLoader(
-    processData.moduleData,
-    processData.moduleDef.options
-  );
-
   let command = "X = (X or 0) + 1";
   // let memory = null;
   let lastOutput = null;
@@ -92,31 +86,24 @@ export async function processLoop(
     if (i === 1) command = command1;
     if (i === 2) command = command2toN;
     if (i === count) command = commandN;
-    const result = await handle(
-      null,
-      {
-        Id: `MESSAGE_ID_${i}`,
-        "Block-Height": "0",
-        Timestamp: "0",
-        Cron: false,
-        Owner: "FROM_ADDRESS",
-        From: "FROM_ADDRESS",
-        Target: processData.processDef.id,
-        Module: "MODULE_ADDRESS",
-        Tags: [{ name: "Action", value: "Eval" }],
-        Data: command,
-      },
-      processData.env,
-      {
-        outputMemory: false,
-      }
-    );
+    const result = await applyMessage({
+      Id: `MESSAGE_ID_${i}`,
+      "Block-Height": "0",
+      Timestamp: "0",
+      Cron: false,
+      Owner: "FROM_ADDRESS",
+      From: "FROM_ADDRESS",
+      // Target: processData.processDef.id,
+      Module: "MODULE_ADDRESS",
+      Tags: [{ name: "Action", value: "Eval" }],
+      Data: command,
+    });
     // console.log(result);
 
     // memory = result.Memory;
     lastOutput = result.Output;
 
-    console.log("Memory size: ", result.Memory?.byteLength);
+    // console.log("Memory size: ", result.Memory?.byteLength);
 
     // console.log({ input: command, output: result.Output });
   }

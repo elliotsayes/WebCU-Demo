@@ -1,4 +1,4 @@
-import AoLoader from "@permaweb/ao-loader";
+import AoLoader, { Message } from "@permaweb/ao-loader";
 import { fetchProcessInitial, fetchProcessState } from "./lib/process";
 import { AoMessage, generateMessages } from "./lib/messages";
 import { generateFakeAopProcess } from "./demo/fakeAopProcess";
@@ -9,7 +9,7 @@ let processHandle: Awaited<ReturnType<typeof AoLoader>> | undefined;
 let processStateSnapshot: ArrayBuffer | undefined;
 let pendingMessagesBuffer: Array<AoMessage> = [];
 
-export async function loadAopProcess() {
+export async function loadVirtualAopProcess() {
   processData = await generateFakeAopProcess();
   return true;
 }
@@ -24,15 +24,36 @@ export async function loadProcess(processId: string) {
   }
 }
 
-export async function runMessages(count: number) {
+export async function createHandle() {
   if (!processData) {
     console.error("Process not loaded");
     return;
   }
 
-  const res = await processLoop(processData, count);
+  processHandle = await AoLoader(
+    processData.moduleData,
+    processData.moduleDef.options
+  );
 
-  return res;
+  return true;
+}
+
+export async function applyMessage(message: Message) {
+  if (!processData) {
+    console.error("Process not loaded");
+    return;
+  }
+
+  if (!processHandle) {
+    console.error("Handle not loaded");
+    return;
+  }
+
+  const result = await processHandle(null, message, processData.env, {
+    outputMemory: false,
+  });
+
+  return result;
 }
 
 export async function startSubscription(processId: string) {

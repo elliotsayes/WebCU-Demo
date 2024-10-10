@@ -2,6 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import { processLoop } from "./demo/processLoop";
 
 const instance = new ComlinkWorker<typeof import("./worker")>(
   new URL("./worker", import.meta.url),
@@ -27,8 +28,11 @@ function App() {
       <div className="card">
         <button
           onClick={() => {
-            instance.loadAopProcess().then((success) => {
+            instance.loadVirtualAopProcess().then((success) => {
               console.log({ loadProcess: success });
+              instance.createHandle().then((success) => {
+                console.log({ createHandle: success });
+              });
             });
           }}
         >
@@ -41,7 +45,9 @@ function App() {
         <button
           onClick={() => {
             const timeBefore = performance.now();
-            instance.runMessages(count).then((result) => {
+            processLoop(count, async (m) => {
+              return (await instance.applyMessage(m))!;
+            }).then((result) => {
               const timeAfter = performance.now();
               console.log({
                 time: timeAfter - timeBefore,
