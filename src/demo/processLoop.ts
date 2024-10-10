@@ -71,7 +71,6 @@ const commandN = `
 world:Destroy()
 
 -- Return
-print(worldState)
 return worldState
 `;
 
@@ -86,17 +85,17 @@ export async function processLoop(
   );
 
   let command = "X = (X or 0) + 1";
-  let memory = null;
+  // let memory = null;
   let lastOutput = null;
   for (let i = 0; i <= count; i++) {
-    // if (i === 0) command = command0;
-    // if (i === 1) command = command1;
-    // if (i === 2) command = command2toN;
-    // if (i === count) command = commandN;
+    if (i === 0) command = command0;
+    if (i === 1) command = command1;
+    if (i === 2) command = command2toN;
+    if (i === count) command = commandN;
     const result = await handle(
-      memory,
+      null,
       {
-        Id: "MESSAGE_ID",
+        Id: `MESSAGE_ID_${i}`,
         "Block-Height": "0",
         Timestamp: "0",
         Cron: false,
@@ -107,12 +106,17 @@ export async function processLoop(
         Tags: [{ name: "Action", value: "Eval" }],
         Data: command,
       },
-      processData.env
+      processData.env,
+      {
+        outputMemory: false,
+      }
     );
     // console.log(result);
 
-    memory = result.Memory;
+    // memory = result.Memory;
     lastOutput = result.Output;
+
+    console.log("Memory size: ", result.Memory?.byteLength);
 
     // console.log({ input: command, output: result.Output });
   }
