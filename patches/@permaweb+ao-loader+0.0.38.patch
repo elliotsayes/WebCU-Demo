@@ -1,5 +1,5 @@
 diff --git a/node_modules/@permaweb/ao-loader/dist/index.cjs b/node_modules/@permaweb/ao-loader/dist/index.cjs
-index 6e88627..eb379fa 100644
+index 6e88627..6a8b6a0 100644
 --- a/node_modules/@permaweb/ao-loader/dist/index.cjs
 +++ b/node_modules/@permaweb/ao-loader/dist/index.cjs
 @@ -6376,7 +6376,7 @@ var require_emscripten2 = __commonJS({
@@ -38,3 +38,24 @@ index 6e88627..eb379fa 100644
          Module2["addRunDependency"] = addRunDependency;
          Module2["removeRunDependency"] = removeRunDependency;
          Module2["FS_createPath"] = FS.createPath;
+@@ -26674,7 +26674,8 @@ module.exports = async function(binary, options) {
+   if (typeof binary === "function") {
+     WebAssembly.instantiate = originalInstantiate;
+   }
+-  return async (buffer, msg, env) => {
++  return async (buffer, msg, env, opts) => {
++    const outputMemory = opts?.outputMemory ?? true
+     const originalRandom = Math.random;
+     const originalLog = console.log;
+     try {
+@@ -26699,7 +26700,9 @@ module.exports = async function(binary, options) {
+       Math.random = originalRandom;
+       console.log = originalLog;
+       return {
+-        Memory: instance.HEAPU8.slice(),
++        Memory: outputMemory
++          ? instance.HEAPU8.slice()
++          : null,
+         Error: response.Error,
+         Output: response.Output,
+         Messages: response.Messages,
